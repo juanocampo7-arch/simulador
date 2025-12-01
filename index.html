@@ -59,13 +59,19 @@
             <!-- TARJETA DE PERFIL Y DESCRIPCIÓN DEL PROGRAMA -->
             <div class="w-full max-w-5xl glass-panel rounded-2xl p-8 flex flex-col md:flex-row gap-8 text-left">
                 
-                <!-- Columna Izquierda: Perfil del Desarrollador (SIN FOTO) -->
+                <!-- Columna Izquierda: Perfil del Desarrollador (CON FOTO) -->
                 <div class="flex-shrink-0 flex flex-col items-center md:items-start w-full md:w-1/3 border-b md:border-b-0 md:border-r border-gray-600/30 pb-6 md:pb-0 md:pr-6">
+                    <div class="w-32 h-32 rounded-full border-4 border-blue-400/50 overflow-hidden shadow-lg bg-slate-800 mb-4 relative group">
+                        <!-- Imagen de perfil -->
+                        <img src="perfil.jpg" alt="Juan José Ocampo" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                        <!-- Fallback si no hay imagen -->
+                        <span class="hidden w-full h-full items-center justify-center text-3xl font-bold text-blue-200 bg-slate-700 absolute top-0 left-0">JJ</span>
+                    </div>
                     
-                    <h2 class="text-2xl font-bold text-white text-center md:text-left mb-1">Juan José Ocampo Arias</h2>
-                    <p class="text-cyan-300 font-medium text-xs uppercase tracking-wider mb-4 text-center md:text-left">Ing. Sistemas • Programador Junior</p>
+                    <h2 class="text-xl font-bold text-white text-center md:text-left mb-1">Juan José Ocampo Arias</h2>
+                    <p class="text-cyan-300 font-medium text-xs uppercase tracking-wider mb-2 text-center md:text-left">Ing. Sistemas • Programador Junior</p>
                     
-                    <p class="text-gray-400 text-sm italic text-center md:text-left leading-relaxed">
+                    <p class="text-gray-400 text-xs italic text-center md:text-left leading-relaxed">
                         "Joven de 16 años de Pereira, apasionado por crear tecnología que facilite el aprendizaje."
                     </p>
                 </div>
@@ -1080,7 +1086,7 @@
 
         // --- MÓDULO 3: ROTACIONAL ---
         const rotationalSim = {
-            isRunning: false, time: 0, dt: 0.05, interval: null,
+            isRunning: false, time: 0, dt: 0.05, interval: null, isInitialized: false,
             state: { angle: 0, omega: 0, alpha: 0, torque: 0, inertia: 0, L: 0, work: 0 },
             charts: { omega: null, energy: null }, canvas: null, ctx: null, dom: {},
 
@@ -1094,6 +1100,7 @@
                     this.canvas.height = container.clientHeight;
                 }
                 
+                // Resetear DOM mapping cada vez para asegurar referencias frescas
                 this.dom = {
                     inputs: {
                         f: getEl('input-rot-f'),
@@ -1111,7 +1118,12 @@
                 };
 
                 this.calculatePhysics();
-                if(!this.chart) this.initChart();
+                
+                // Solo inicializar gráficas si no existen
+                if(!this.isInitialized) {
+                    this.initCharts();
+                    this.isInitialized = true;
+                }
                 this.drawScene();
             },
 
